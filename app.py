@@ -1,19 +1,20 @@
 from flask import Flask
+from flask_cors import CORS
 from config.database import engine, Base
-from routes.web import web
-import models.menu_model  # register model
+from routes.menu_routes import menu_bp
 
 app = Flask(__name__)
+CORS(app)
 
-# Buat tabel otomatis (jika belum ada di database)
+# Buat tabel otomatis kalau belum ada
 Base.metadata.create_all(bind=engine)
 
-# Daftarkan route
-app.register_blueprint(web)
+# Register blueprint untuk route menu
+app.register_blueprint(menu_bp, url_prefix="/api/menus")
 
 @app.route("/")
 def home():
-    return {"message": "3awan Cafe & Resto API is running 🚀"}
+    return {"message": "3awan Cafe & Resto API is running!"}
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=8080)
